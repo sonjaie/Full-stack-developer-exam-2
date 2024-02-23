@@ -17,8 +17,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: '18'
           cache: 'yarn'
+
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
       - name: Install dependencies
         run: yarn install
@@ -46,7 +54,7 @@ jobs:
           path: ./build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@3a2b2a4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
