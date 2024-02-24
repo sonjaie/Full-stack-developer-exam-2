@@ -58,54 +58,57 @@ jobs:
           publish_dir: ./build
 
   prepare_and_upload_laravel:
-    name: Build Laravel
-    needs: deploy_react
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Setup PHP, Composer
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, pdo_mysql
-          coverage: none
-
-      - name: Install Composer dependencies
-        run: composer install --optimize-autoloader --no-dev
-        working-directory: ./backend
-
-      - name: Create .env file
-        run: |
-          touch backend/.env
-          echo "APP_ENV=production" >> backend/.env
-          echo "APP_DEBUG=false" >> backend/.env
-          echo "APP_KEY=${{ secrets.APP_KEY }}" >> backend/.env
-          echo "DB_CONNECTION=mysql" >> backend/.env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> backend/.env
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> backend/.env
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> backend/.env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> backend/.env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> backend/.env
-          echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
-
-      - name: Build Laravel
-        run:  | 
-          php artisan key:generate --force
-          php artisan migrate --force
-          php artisan passport:install
-          php artisan optimize
-          php artisan cache:clear
-          php artisan config:clear
-        working-directory: ./backend
-
-      - name: Deploy Laravel
-        uses: SamKirkland/FTP-Deploy-Action@4.3.1
-        with:
-          server: ${{ secrets.INFINITYFREE_SERVER }}
-          username: ${{ secrets.INFINITYFREE_USERNAME }}
-          password: ${{ secrets.INFINITYFREE_PASSWORD }}
-          local-dir: ./backend/public/
-          server-dir: /home/vol9_3/infinityfree.com/ifo_36039644/htdocs/
+      name: Prepare and Upload Laravel
+      needs: deploy_react
+      runs-on: ubuntu-latest
+      if: github.ref == 'refs/heads/main'
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v3
+  
+        - name: Setup PHP, Composer
+          uses: shivammathur/setup-php@v2
+          with:
+            php-version: '8.2'
+            extensions: mbstring, pdo_mysql
+            coverage: none
+  
+        - name: Install Composer dependencies
+          run: composer install --optimize-autoloader --no-dev
+          working-directory: ./backend
+  
+        - name: Create .env file
+          run: |
+            touch backend/.env
+            echo "APP_ENV=production" >> backend/.env
+            echo "APP_DEBUG=false" >> backend/.env
+            echo "APP_KEY=${{ secrets.APP_KEY }}" >> backend/.env
+            echo "DB_CONNECTION=mysql" >> backend/.env
+            echo "DB_HOST=${{ secrets.DB_HOST }}" >> backend/.env
+            echo "DB_PORT=${{ secrets.DB_PORT }}" >> backend/.env
+            echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> backend/.env
+            echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> backend/.env
+            echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> backend/.env
+            echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
+  
+        - name: Generate key, migrate, and install Passport
+          run: |
+            php artisan key:generate --force
+            php artisan migrate --force
+            composer require laravel/passport
+            php artisan passport:install
+            php artisan passport:keys
+            php artisan optimize
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+          working-directory: ./backend
+  
+        - name: Deploy Laravel
+          uses: SamKirkland/FTP-Deploy-Action@4.3.1
+          with:
+            server: ${{ secrets.INFINITYFREE_SERVER }}
+            username: ${{ secrets.INFINITYFREE_USERNAME }}
+            password: ${{ secrets.INFINITYFREE_PASSWORD }}
+            local-dir: ./backend/public/
+            server-dir: /home/vol9_3/infinityfree.com/ifo_36039644/htdocs/
