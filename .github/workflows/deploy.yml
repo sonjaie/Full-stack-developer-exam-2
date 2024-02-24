@@ -96,11 +96,13 @@ jobs:
       
       - name: Deploy Laravel
         run: |
-          php artisan key:generate --force
-          php artisan config:cache
-          php artisan route:cache
-          php artisan view:cache
-        working-directory: ./backend
+            php artisan key:generate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan migrate --force --path=database/migrations # Run migrations
+            php artisan db:seed --class=SampleSeeder --force # Seed the database with sample data
+            working-directory: ./backend
 
       - name: Deploy Laravel
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
