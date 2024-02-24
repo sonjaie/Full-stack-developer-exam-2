@@ -96,6 +96,8 @@ function App() {
   };
 
   useEffect(() => {
+    console.log("env", process.env)
+    console.log("env", process.env.REACT_APP_API_BASE_URL)
     const fetchSamples = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/samples`);
