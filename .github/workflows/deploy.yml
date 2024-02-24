@@ -90,7 +90,6 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> backend/.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> backend/.env
           echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
-        working-directory: ./backend
 
       - name: Build Laravel
         run:  | 
