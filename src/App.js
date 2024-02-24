@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import SearchBar from './component/searchbar';
+import axios from 'axios';
 
 const fetchDataFromApi = async (page, limit) => {
   try {
