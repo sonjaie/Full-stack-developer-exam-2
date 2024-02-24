@@ -76,11 +76,9 @@ jobs:
           extensions: mbstring, pdo_mysql
           coverage: none
 
-      - name: Change to backend directory
-        run: cd backend
-
       - name: Install Composer dependencies
         run: composer install --optimize-autoloader --no-dev
+        working-directory: ./backend
 
       - name: Create .env file
         run: |
