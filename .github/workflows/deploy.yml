@@ -93,7 +93,6 @@ jobs:
   
         - name: Generate key, migrate, and install Passport
           run: |
-            php artisan key:generate --force
             php artisan migrate --force
             php artisan db:seed --class=SampleSeeder
             php artisan optimize
