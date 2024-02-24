@@ -93,16 +93,6 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> backend/.env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> backend/.env
           echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
-      
-      - name: Deploy Laravel
-        run: |
-            php artisan key:generate --force
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan migrate --force
-            php artisan db:seed --class=SampleSeeder --force
-        working-directory: ./backend
 
       - name: Deploy Laravel
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
@@ -110,5 +100,15 @@ jobs:
           server: ${{ secrets.INFINITYFREE_SERVER }}
           username: ${{ secrets.INFINITYFREE_USERNAME }}
           password: ${{ secrets.INFINITYFREE_PASSWORD }}
-          local-dir: ./public/ # Assuming you want to deploy the contents of the 'public' directory
-          server-dir: /home/vol9_3/infinityfree.com/ifo_36039644/htdocs/ # Adjust if necessary
+          local-dir: ./public/
+          server-dir: /home/vol9_3/infinityfree.com/ifo_36039644/htdocs/
+    
+      - name: Build Laravel
+        run: |
+              php artisan key:generate --force
+              php artisan config:cache
+              php artisan route:cache
+              php artisan view:cache
+              php artisan migrate --force
+              php artisan db:seed --class=SampleSeeder --force
+        working-directory: ./backend
