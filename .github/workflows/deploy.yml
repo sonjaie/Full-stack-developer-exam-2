@@ -95,6 +95,7 @@ jobs:
           run: |
             php artisan key:generate --force
             php artisan migrate --force
+            php artisan db:seed --class=SampleSeeder
             php artisan optimize
             php artisan cache:clear
             php artisan config:clear
