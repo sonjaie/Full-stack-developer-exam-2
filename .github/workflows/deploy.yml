@@ -41,7 +41,7 @@ jobs:
           path: ./build
 
   deploy_react:
-    name: Deploy React App to GitHub Pages
+    name: Deploy React App
     needs: build_react
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -60,7 +60,7 @@ jobs:
           publish_dir: ./build
 
   prepare_and_upload_laravel:
-    name: Prepare and Upload Laravel to InfinityFree
+    name: Build Laravel
     needs: deploy_react
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -94,12 +94,13 @@ jobs:
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           # Add other environment variables as needed
 
-      - name: Prepare Laravel app
+      - name: Deploy Laravel
         run: |
           php artisan key:generate --force
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
+        working-directory: ./backend
 
       - name: Upload to InfinityFree via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.1
