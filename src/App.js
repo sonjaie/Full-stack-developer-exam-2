@@ -40,7 +40,6 @@ function App() {
   const [launches, setLaunches] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filteredLaunches, setFilteredLaunches] = useState([]);
-  const [sampleData, setSampleData] = useState();
   const limit = 10;
 
   const fetchData = useCallback(async () => {
@@ -101,7 +100,6 @@ function App() {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/samples`);
         console.log("data", response.data)
-        setSampleData(response.data);
       } catch (error) {
         console.error('Error fetching samples:', error);
       }
