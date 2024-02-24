@@ -77,19 +77,12 @@ jobs:
         run: composer install --optimize-autoloader --no-dev
         working-directory: ./backend
 
-      - name: Install MySQL client
-        run: sudo apt-get update && sudo apt-get install -y mysql-client
-
-      - name: Check MySQL Database Connection
-        run: |
-          mysqladmin -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} ping
-
       - name: Create .env file
         run: |
           touch backend/.env
           echo "APP_ENV=production" >> backend/.env
           echo "APP_DEBUG=false" >> backend/.env
-          echo "APP_KEY=$(php artisan key:generate --show)" >> backend/.env
+          echo "APP_KEY=${{ secrets.APP_KEY }}" >> backend/.env
           echo "DB_CONNECTION=mysql" >> backend/.env
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> backend/.env
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> backend/.env
@@ -99,12 +92,14 @@ jobs:
           echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
         working-directory: ./backend
 
-      - name: Generate Laravel APP_KEY
-        run: php artisan key:generate --force
-        working-directory: ./backend
-
-      - name: Run Laravel Migrations
-        run: php artisan migrate --force
+      - name: Build Laravel
+        run:  | 
+          php artisan key:generate --force
+          php artisan migrate --force
+          php artisan passport:install
+          php artisan optimize
+          php artisan cache:clear
+          php artisan config:clear
         working-directory: ./backend
 
       - name: Deploy Laravel
