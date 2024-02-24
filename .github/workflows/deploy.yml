@@ -102,13 +102,11 @@ jobs:
           password: ${{ secrets.INFINITYFREE_PASSWORD }}
           local-dir: ./public/
           server-dir: /home/vol9_3/infinityfree.com/ifo_36039644/htdocs/
-
-      - name: Set up Laravel Environment
+      
+      - name: Check MySQL Database Connection
         run: |
-          echo "DB_CONNECTION=mysql" >> .env
-          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
-          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
-          echo "DB_DATABASE=${{ secrets.DB_DATABASE }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-        working-directory: ./backend
+            mysqladmin -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} ping
+
+      - name: Check MySQL Database Detailed Status
+        run: |
+            mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} -e "STATUS"
