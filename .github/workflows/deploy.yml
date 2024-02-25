@@ -18,6 +18,10 @@ jobs:
         with:
           node-version: '18'
           cache: 'yarn'
+    
+      - name: Add homepage to package.json
+        run: |
+          sed -i 's/"name": "your-app"/&,"homepage": "https:\/\/<username>.github.io\/<repository-name>"/' package.json
 
       - name: Cache node modules
         uses: actions/cache@v2
