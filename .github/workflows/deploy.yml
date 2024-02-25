@@ -93,12 +93,15 @@ jobs:
   
         - name: Generate key, migrate, and install Passport
           run: |
-            php artisan migrate --force || true
-            php artisan db:seed --class=SampleSeeder
-            php artisan optimize || true
-            php artisan cache:clear || true
-            php artisan config:clear || true
-            php artisan route:clear || true
+            php artisan migrate --force
+            if ! php artisan db:seed --class=SampleSeeder; then
+              echo "Seeding failed, handle this case as needed"
+              exit 1
+            fi
+            php artisan optimize
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
           working-directory: ./backend
   
         - name: Deploy Laravel
