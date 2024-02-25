@@ -98,7 +98,7 @@ function App() {
   useEffect(() => {
     const fetchSamples = async () => {
       try {
-        const response = await axios.get(`/api/samples`);
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/samples`);
         console.log("data", response.data)
       } catch (error) {
         console.error('Error fetching samples:', error);
