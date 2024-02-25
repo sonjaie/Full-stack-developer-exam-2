@@ -62,7 +62,7 @@ jobs:
           publish_dir: ./build
 
   prepare_and_upload_laravel:
-      name: Build and Upload Laravel
+      name: Preparing Laravel
       needs: deploy_react
       runs-on: ubuntu-latest
       if: github.ref == 'refs/heads/main'
