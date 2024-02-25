@@ -95,7 +95,6 @@ jobs:
           run: |
             php artisan down
             php artisan migrate --force
-            php artisan db:seed --class=SampleSeeder
             php artisan optimize
             php artisan cache:clear
             php artisan config:clear
