@@ -91,17 +91,17 @@ jobs:
             echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> backend/.env
             echo "REACT_APP_API_BASE_URL=${{ secrets.REACT_APP_API_BASE_URL }}" >> backend/.env
   
-        - name: Generate key, migrate, and install Passport
+        - name: Laravel Migration
           run: |
+            php artisan down
             php artisan migrate --force
-            if ! php artisan db:seed --class=SampleSeeder; then
-              echo "Seeding failed, handle this case as needed"
-              exit 1
-            fi
+            php artisan db:seed --class=SampleSeeder
             php artisan optimize
             php artisan cache:clear
             php artisan config:clear
             php artisan route:clear
+            php artisan queue:restart
+            php artisan up
           working-directory: ./backend
   
         - name: Deploy Laravel
