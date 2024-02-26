@@ -119,4 +119,4 @@ jobs:
             username: ${{ secrets.INFINITYFREE_USERNAME }}
             password: ${{ secrets.INFINITYFREE_PASSWORD }}
             local-dir: ./
-            server-dir: /htdocs
+            server-dir: /htdocs/
