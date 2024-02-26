@@ -4,11 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './screen/home';
 import history from './history';
 
-const basename = process.env.REACT_APP_BASENAME;
+// const basename = process.env.REACT_APP_BASENAME;
 
 function App() {
   return (
-    <Router basename={basename} history={history}>
+    <Router history={history}>
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
