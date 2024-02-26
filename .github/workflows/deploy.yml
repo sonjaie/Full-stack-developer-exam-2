@@ -107,11 +107,16 @@ jobs:
             php artisan up
           working-directory: ./backend
   
-        - name: Deploy Laravel
+        - name: Checkout gh-pages branch
+          uses: actions/checkout@v2
+          with:
+            ref: gh-pages
+      
+        - name: Deploy to InfinityFree
           uses: SamKirkland/FTP-Deploy-Action@4.3.1
           with:
             server: ${{ secrets.INFINITYFREE_SERVER }}
             username: ${{ secrets.INFINITYFREE_USERNAME }}
             password: ${{ secrets.INFINITYFREE_PASSWORD }}
-            local-dir: ./public/
-            server-dir: /htdocs/
+            local-dir: .
+            server-dir: /htdocs
